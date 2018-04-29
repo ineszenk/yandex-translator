@@ -16,11 +16,12 @@ class Output extends React.Component {
 
   render() {
     const value = this.props.value;
+    const showAudio = this.props.showAudio;
     const styleContainer = {
       width: '100%'
     }
     const floatLeft = {
-      float: 'left',
+      float: showAudio ? 'left' : 'none',
       marginTop: '15px'
     }
 
@@ -34,12 +35,17 @@ class Output extends React.Component {
         >
           {value}
         </p>
-        <IconButton
-          tooltip="Listen"
-          onClick={(e) => this._speakTrans()}
-        >
-          <VolumeUp />
-        </IconButton>
+        {
+          showAudio ?
+            <IconButton
+              tooltip="Listen"
+              onClick={(e) => this._speakTrans()}
+            >
+              <VolumeUp />
+            </IconButton>
+          : 
+            null
+        }
         <MaterialSnackbar
           ref="snackbar"
         />
@@ -59,13 +65,13 @@ class Output extends React.Component {
     setTimeout(() => {
       this.refs.snackbar.dismiss();
     }, 1000);
-    // speakTrans(value, lang)
   }
 }
 
 Output.propTypes = {
   value: PropTypes.string,
-  lang: PropTypes.string
+  lang: PropTypes.string,
+  showAudio: PropTypes.bool
 }
 
 export default Output;

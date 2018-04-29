@@ -7,7 +7,8 @@ import Output from '../presentational/Output';
 import config from '../../config';
 import { 
   getTrans,
-  getLangs 
+  getLangs,
+  sysnthesisLangs
 } 
 from '../../api';
 
@@ -24,12 +25,14 @@ class Translator extends React.Component {
 
   componentDidMount() {
     this._getLangs(); 
+    this._getSysthesisLangs();
   }
 
   render() {
     const langsList = this.state.langsList;
     const transVal = this.state.transVal;
     const transLang = this.state.transLang;
+    const showAudio = this.state.showAudio;
 
     return (
       <MaterialDiv>
@@ -42,6 +45,7 @@ class Translator extends React.Component {
             <Output
               value={transVal}
               lang={transLang}
+              showAudio={showAudio}
             />
           :
             null
@@ -74,15 +78,28 @@ class Translator extends React.Component {
   }
   
   _getTrans(target, to) {
+    const sysLangs = this.state.sysLangs;
     this.setState({ transLang: to });
+    
     getTrans((transVal) => {
       this.setState({ transVal });
       this.refs.snackbar.show('Data Translated');
+      if (sysLangs.includes(to)) {
+        this.setState({ showAudio: true });
+      } else {
+        this.setState({ showAudio: false });
+      }
     }, target, to);
 
     setTimeout(() => {
       this.refs.snackbar.dismiss();
     }, 1000);
+  }
+  
+  _getSysthesisLangs() {
+    sysnthesisLangs((sysLangs) => {
+      this.setState({ sysLangs });
+    }) 
   }
 }
 

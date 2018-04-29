@@ -28,27 +28,22 @@ function getLangs(cb) {
   });
 }
 
-function sysnthesisLangs() {
-  const voices = speechSynthesis.getVoices();
-  const supportedLangs = voices.map(voice => voice.lang.split('-')[0]);
-  const uniqueLangs = [...new Set(supportedLangs)]; 
-  return uniqueLangs;
+function sysnthesisLangs(cb) {
+  window.speechSynthesis.onvoiceschanged = function() {
+    const voices = speechSynthesis.getVoices();
+    const supportedLangs = voices.map(voice => voice.lang.split('-')[0]);
+    const uniqueLangs = [...new Set(supportedLangs)]; 
+    cb(uniqueLangs);
+  };
 }
 
 function speakTrans(cb, text, lang) {
   if (typeof speechSynthesis === 'undefined' && speechSynthesis.getVoices()) {
-    return;
-  }
-
-  const msg = new SpeechSynthesisUtterance();
-  const voices = speechSynthesis.getVoices();
-  const supportedLangs = voices.map(voice => voice.lang.split('-')[0]);
-
-  if (!supportedLangs.includes(lang)) {
     cb(new Error());
     return;
   }
 
+  const msg = new SpeechSynthesisUtterance();
   msg.rate = 1;
   msg.pitch = 1;
   msg.text = text;
@@ -60,4 +55,5 @@ export {
   getTrans,
   getLangs,
   speakTrans,
+  sysnthesisLangs,
 };
