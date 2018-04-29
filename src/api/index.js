@@ -40,12 +40,15 @@ function speakTrans(cb, text, lang) {
     return;
   }
 
-  if (!sysnthesisLangs().includes(lang)) {
+  const msg = new SpeechSynthesisUtterance();
+  const voices = speechSynthesis.getVoices();
+  const supportedLangs = voices.map(voice => voice.lang.split('-')[0]);
+
+  if (!supportedLangs.includes(lang)) {
     cb(new Error());
     return;
   }
 
-  const msg = new SpeechSynthesisUtterance();
   msg.rate = 1;
   msg.pitch = 1;
   msg.text = text;
