@@ -1,3 +1,4 @@
+/* eslint-disable */
 import Request from 'superagent';
 import translate from 'translate';
 import config from '../config';
@@ -27,7 +28,23 @@ function getLangs(cb) {
   });
 }
 
-function speakTrans(text, lang) {
+function sysnthesisLangs() {
+  const voices = speechSynthesis.getVoices();
+  const supportedLangs = voices.map(voice => voice.lang.split('-')[0]);
+  const uniqueLangs = [...new Set(supportedLangs)]; 
+  return uniqueLangs;
+}
+
+function speakTrans(cb, text, lang) {
+  if (typeof speechSynthesis === 'undefined' && speechSynthesis.getVoices()) {
+    return;
+  }
+
+  if (!sysnthesisLangs().includes(lang)) {
+    cb(new Error());
+    return;
+  }
+
   const msg = new SpeechSynthesisUtterance();
   msg.rate = 1;
   msg.pitch = 1;

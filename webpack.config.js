@@ -3,8 +3,8 @@ const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 
 module.exports = {
   entry: {
-    vendor: './src/index.jsx',
-    app: './src/api/index.js'
+    app: './src/index.jsx',
+    vendor: './src/api/index.js'
   },
   module: {
     rules: [

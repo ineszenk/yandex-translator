@@ -58,8 +58,9 @@ class Translator extends React.Component {
       if (err) {
         this.refs.snackbar.show('Oops! An error occurred while fetching the data');
       } else {
+        this.setState({ langs });
         const langsList = [];
-        Object.keys(langs).map(function(key, index) {
+        Object.keys(langs).map((key, index) => {
           langsList.push(<MenuItem value={key} key={index} primaryText={langs[key]} />);
         });
         this.setState({ langsList });  
